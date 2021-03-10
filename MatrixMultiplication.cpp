@@ -1,6 +1,14 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
+
+/*
+ * Generate Algorithm
+ * matA a M*K matrix
+ * matB a K*N matrix
+ * matC a M*N matrix
+ * matC = matA * matB
+ */
 static void mm_generate(float* matA,float* matB,float* matC,const int M,const int N,const int K)
 {
 	for (int i = 0; i < M;i++)
@@ -28,6 +36,24 @@ static void showMatrix(float* C, int M, int N){
     printf("\n");
 }
 
+/*
+ * Strassen Algorithm
+ * matA a M*K matrix
+ * matB a K*N matrix
+ * matC a M*N matrix
+ * matC = matA * matB
+ * M1 = (A11+A22)*(B11+B22)
+ * M2 = (A21+A22)*B11
+ * M3 = A11*(B12-B22)
+ * M4 = A22*(B21-B11)
+ * M5 = (A11+A12)*B22
+ * M6 = (A21-A11)*(B11+B12)
+ * M7 = (A12-A22)*(B21+B22)
+ * C11 = M1+M4-M5+M7
+ * C12 = M3+M5
+ * C21 = M2+M4
+ * C22 = M1-M2+M3+M6
+ */
 static void mm_strassen(float* matA, float* matB, float* matC, const int M, const int N, const int K)
 {
 	if ((M <= 2) || M%2 != 0 || N%2 != 0 || K%2!=0)
@@ -262,6 +288,12 @@ static void mm_strassen(float* matA, float* matB, float* matC, const int M, cons
 	free(M7);           M7=NULL;
 }
 
+/*
+ * Used in Coppersmith-Winograd Algorithm
+ * strideA is the col num of matA, initial value is K
+ * strideB is the col num of matB, initial value is N
+ * strideC is the col num of matC, initial value is N
+ */
 static void mm_generate(float* matA, float* matB, float* matC, const int M, const int N, const int K,
                         const int strideA, const int strideB, const int strideC){
     for(int i = 0; i < M; i++){
@@ -423,7 +455,10 @@ static void mm_CoppersmithWinograd(float* matA, float* matB, float* matC, const 
     mm_CoppersmithWinograd(matA, matB, matC, M, N, K, K, N, N);
 }
 
-void mm_test(int M, int N, int K, int rangeTop){
+/*
+ * It is the test function
+ */
+static void mm_test(int M, int N, int K, int rangeTop){
     unsigned seed = time(0);
     srand(seed);
     clock_t start,end;
