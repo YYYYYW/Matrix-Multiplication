@@ -110,7 +110,7 @@ static void mm_strassen(float* matA, float* matB, float* matC, const int M, cons
 		//M2_1 = B11
         float* M2_1 = (float*) malloc((K/2) * (N/2) * sizeof(float));
         for(int i = 0; i < K / 2; i++) {
-            for(int j = 0; j < M / 2; j++){
+            for(int j = 0; j < N / 2; j++){
                 M2_1[i * N/2 + j] = matB[i * N + j];
             }
         }
